@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import App from "./components/App";
 import "./index.css";
 
 const root = document.getElementById("root");
@@ -10,7 +11,6 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
+    <App />
   </StrictMode>,
 );
