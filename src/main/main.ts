@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import started from "electron-squirrel-startup";
+import contextMenu from "electron-context-menu";
 
 if (started) {
   app.quit();
@@ -14,6 +15,8 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
+  contextMenu({ window: mainWindow });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
