@@ -1,3 +1,4 @@
 {
-  "*.{ts,tsx,css,html}": "npx prettier --write"
+  "*.{css,html}": "npx prettier --write",
+  "*.{ts,tsx,json}": "npx biome check --write --unsafe --no-errors-on-unmatched"
 }
