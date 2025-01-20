@@ -17,7 +17,7 @@ const createWindow = () => {
     },
   });
 
-  contextMenu({ window: mainWindow });
+  contextMenu({ window: mainWindow, showInspectElement: false });
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
