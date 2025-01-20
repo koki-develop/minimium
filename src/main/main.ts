@@ -1,7 +1,7 @@
-import { app, BrowserWindow } from "electron";
-import path from "path";
-import started from "electron-squirrel-startup";
+import path from "node:path";
+import { BrowserWindow, app } from "electron";
 import contextMenu from "electron-context-menu";
+import started from "electron-squirrel-startup";
 
 if (started) {
   app.quit();
