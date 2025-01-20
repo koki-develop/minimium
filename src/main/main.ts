@@ -45,3 +45,9 @@ app.on("activate", () => {
     createWindow();
   }
 });
+
+app.on("web-contents-created", (_, contents) => {
+  if (contents.getType() === "webview") {
+    contextMenu({ window: contents });
+  }
+});
