@@ -38,6 +38,7 @@
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "@vitejs/plugin-react": "4.3.4",
+    "babel-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
     "electron": "34.0.0",
     "eslint": "8.57.1",
     "eslint-plugin-import": "2.31.0",
