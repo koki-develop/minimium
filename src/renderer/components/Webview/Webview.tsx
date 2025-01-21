@@ -47,20 +47,28 @@ const webviewEvents = [
   "context-menu",
 ];
 
+export type WebviewState = {
+  url: string;
+  isLoading: boolean;
+  canGoBack: boolean;
+  canGoForward: boolean;
+};
+
 export type WebviewTag = ElectronWebviewTag;
 
 export type WebviewProps = ComponentPropsWithoutRef<"webview"> & {
-  ref?: RefObject<WebviewTag | null>;
-  onUrlChange?: (url: string) => void;
+  ref: RefObject<WebviewTag | null>;
+  onStateChange: (state: WebviewState) => void;
 };
 
 export default function Webview({
   ref,
-  onUrlChange,
+  onStateChange,
 
   ...props
 }: WebviewProps) {
   const webviewRef = useRef<ElectronWebviewTag>(null);
+  const [url, setUrl] = useState<string>(props.src ?? "");
   const [domReady, setReady] = useState<boolean>(false);
 
   const reflectRef = useCallback(() => {
@@ -69,9 +77,20 @@ export default function Webview({
     ref.current = webviewRef.current;
   }, [ref, domReady]);
 
+  const reflectState = useCallback(() => {
+    if (!webviewRef.current) return;
+    onStateChange?.({
+      url,
+      isLoading: webviewRef.current.isLoadingMainFrame(),
+      canGoBack: webviewRef.current.canGoBack(),
+      canGoForward: webviewRef.current.canGoForward(),
+    });
+  }, [onStateChange, url]);
+
   const reflect = useCallback(() => {
     reflectRef();
-  }, [reflectRef]);
+    reflectState();
+  }, [reflectRef, reflectState]);
 
   useEffect(() => {
     for (const event of webviewEvents) {
@@ -104,12 +123,9 @@ export default function Webview({
    * did-navigate
    */
 
-  const handleDidNavigate = useCallback(
-    ({ url }: { url: string }) => {
-      onUrlChange?.(url);
-    },
-    [onUrlChange],
-  );
+  const handleDidNavigate = useCallback(({ url }: { url: string }) => {
+    setUrl(url);
+  }, []);
 
   useEffect(() => {
     webviewRef.current?.addEventListener("did-navigate", handleDidNavigate);
@@ -128,10 +144,10 @@ export default function Webview({
   const handleDidNavigateInPage = useCallback(
     ({ isMainFrame, url }: { isMainFrame: boolean; url: string }) => {
       if (isMainFrame) {
-        onUrlChange?.(url);
+        setUrl(url);
       }
     },
-    [onUrlChange],
+    [],
   );
 
   useEffect(() => {
