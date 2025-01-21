@@ -48,6 +48,9 @@ app.on("activate", () => {
 
 app.on("web-contents-created", (_, contents) => {
   if (contents.getType() === "webview") {
-    contextMenu({ window: contents });
+    contents.setWindowOpenHandler(({ url }) => {
+      contents.loadURL(url);
+      return { action: "deny" };
+    });
   }
 });
