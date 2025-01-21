@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import AddressBar from "../AddressBar";
+import StartPage from "../StartPage";
 import Webview, { type WebviewState, type WebviewTag } from "../Webview";
 
 export default function App() {
   const webviewRef = useRef<WebviewTag>(null);
-  const [webviewUrl, setWebviewUrl] = useState<string>(
-    "https://duckduckgo.com",
-  );
+  const [webviewUrl, setWebviewUrl] = useState<string>();
   const [webviewState, setWebviewState] = useState<WebviewState | null>(null);
 
   const [query, setQuery] = useState<string>("");
@@ -20,6 +19,7 @@ export default function App() {
   };
 
   const handleSubmit = (query: string) => {
+    setQuery(query);
     setWebviewUrl(query);
   };
 
@@ -37,8 +37,18 @@ export default function App() {
         onGoForward={() => webviewRef.current?.goForward()}
         onRefresh={() => webviewRef.current?.reload()}
         onStop={() => webviewRef.current?.stop()}
-        onSubmit={handleSubmit}
+        onSubmit={(query) => handleSubmit(query)}
       />
+
+      {!webviewUrl && (
+        <StartPage
+          onGithub={() => {
+            setQuery("https://github.com/koki-develop/minimium");
+            setWebviewUrl("https://github.com/koki-develop/minimium");
+          }}
+          onSubmit={(query) => handleSubmit(query)}
+        />
+      )}
 
       <Webview
         ref={webviewRef}
