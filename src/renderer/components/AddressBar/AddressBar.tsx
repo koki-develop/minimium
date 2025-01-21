@@ -37,6 +37,10 @@ export default function AddressBar({
 }: AddressBarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const handleFocus = () => {
+    inputRef.current?.select();
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     inputRef.current?.blur();
@@ -89,10 +93,14 @@ export default function AddressBar({
       <form className="flex-grow" onSubmit={handleSubmit}>
         <TextInput
           ref={inputRef}
+          classNames={{
+            input: "focus:text-black focus:bg-white bg-gray-100 text-gray-600",
+          }}
           radius="xl"
           type="text"
           value={query}
           onChange={(e) => onQueryChange(e.currentTarget.value)}
+          onFocus={handleFocus}
         />
       </form>
     </div>
