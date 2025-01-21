@@ -51,36 +51,27 @@ export type WebviewTag = ElectronWebviewTag;
 
 export type WebviewProps = ComponentPropsWithoutRef<"webview"> & {
   ref?: RefObject<WebviewTag | null>;
+  onUrlChange?: (url: string) => void;
 };
 
 export default function Webview({
   ref,
+  onUrlChange,
 
   ...props
 }: WebviewProps) {
   const webviewRef = useRef<ElectronWebviewTag>(null);
-  const [ready, setReady] = useState<boolean>(false);
-
-  const handleDomReady = useCallback(() => {
-    setReady(true);
-  }, []);
+  const [domReady, setReady] = useState<boolean>(false);
 
   const reflectRef = useCallback(() => {
     if (!ref) return;
-    if (!ready) return;
+    if (!domReady) return;
     ref.current = webviewRef.current;
-  }, [ref, ready]);
+  }, [ref, domReady]);
 
   const reflect = useCallback(() => {
     reflectRef();
   }, [reflectRef]);
-
-  useEffect(() => {
-    webviewRef.current?.addEventListener("dom-ready", handleDomReady);
-    return () => {
-      webviewRef.current?.removeEventListener("dom-ready", handleDomReady);
-    };
-  }, [handleDomReady]);
 
   useEffect(() => {
     for (const event of webviewEvents) {
@@ -93,6 +84,68 @@ export default function Webview({
       }
     };
   }, [reflect]);
+
+  /*
+   * dom-ready
+   */
+
+  const handleDomReady = useCallback(() => {
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    webviewRef.current?.addEventListener("dom-ready", handleDomReady);
+    return () => {
+      webviewRef.current?.removeEventListener("dom-ready", handleDomReady);
+    };
+  }, [handleDomReady]);
+
+  /*
+   * did-navigate
+   */
+
+  const handleDidNavigate = useCallback(
+    ({ url }: { url: string }) => {
+      onUrlChange?.(url);
+    },
+    [onUrlChange],
+  );
+
+  useEffect(() => {
+    webviewRef.current?.addEventListener("did-navigate", handleDidNavigate);
+    return () => {
+      webviewRef.current?.removeEventListener(
+        "did-navigate",
+        handleDidNavigate,
+      );
+    };
+  }, [handleDidNavigate]);
+
+  /*
+   * did-navigate-in-page
+   */
+
+  const handleDidNavigateInPage = useCallback(
+    ({ isMainFrame, url }: { isMainFrame: boolean; url: string }) => {
+      if (isMainFrame) {
+        onUrlChange?.(url);
+      }
+    },
+    [onUrlChange],
+  );
+
+  useEffect(() => {
+    webviewRef.current?.addEventListener(
+      "did-navigate-in-page",
+      handleDidNavigateInPage,
+    );
+    return () => {
+      webviewRef.current?.removeEventListener(
+        "did-navigate-in-page",
+        handleDidNavigateInPage,
+      );
+    };
+  }, [handleDidNavigateInPage]);
 
   return <webview ref={webviewRef} {...props} />;
 }
