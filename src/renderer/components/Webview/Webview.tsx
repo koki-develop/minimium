@@ -49,22 +49,12 @@ const webviewEvents = [
 
 export type WebviewTag = ElectronWebviewTag;
 
-export type WebviewState = {
-  url: string;
-  title: string;
-  isLoadingMainFrame: boolean;
-  canGoBack: boolean;
-  canGoForward: boolean;
-};
-
 export type WebviewProps = ComponentPropsWithoutRef<"webview"> & {
   ref?: RefObject<WebviewTag | null>;
-  onStateChange?: (state: WebviewState) => void;
 };
 
 export default function Webview({
   ref,
-  onStateChange,
 
   ...props
 }: WebviewProps) {
@@ -77,26 +67,13 @@ export default function Webview({
 
   const reflectRef = useCallback(() => {
     if (!ref) return;
-    ref.current = webviewRef.current;
-  }, [ref]);
-
-  const reflectState = useCallback(() => {
-    if (!webviewRef.current) return;
     if (!ready) return;
-
-    onStateChange?.({
-      url: webviewRef.current.getURL(),
-      title: webviewRef.current.getTitle(),
-      isLoadingMainFrame: webviewRef.current.isLoadingMainFrame(),
-      canGoBack: webviewRef.current.canGoBack(),
-      canGoForward: webviewRef.current.canGoForward(),
-    });
-  }, [onStateChange, ready]);
+    ref.current = webviewRef.current;
+  }, [ref, ready]);
 
   const reflect = useCallback(() => {
     reflectRef();
-    reflectState();
-  }, [reflectRef, reflectState]);
+  }, [reflectRef]);
 
   useEffect(() => {
     webviewRef.current?.addEventListener("dom-ready", handleDomReady);
