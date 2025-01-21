@@ -80,13 +80,14 @@ export default function Webview({
 
   const reflectState = useCallback(() => {
     if (!webviewRef.current) return;
+    if (!domReady) return;
     onStateChange?.({
       title: webviewRef.current.getTitle(),
       isLoading: webviewRef.current.isLoadingMainFrame(),
       canGoBack: webviewRef.current.canGoBack(),
       canGoForward: webviewRef.current.canGoForward(),
     });
-  }, [onStateChange]);
+  }, [onStateChange, domReady]);
 
   const reflect = useCallback(() => {
     reflectRef();
