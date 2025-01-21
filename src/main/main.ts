@@ -36,13 +36,6 @@ const createWindow = () => {
       label: "Tools",
       submenu: [
         {
-          label: "Focus address bar",
-          accelerator: process.platform === "darwin" ? "Cmd+L" : "Ctrl+L",
-          click: () => {
-            mainWindow.webContents.send("FOCUS_ADDRESS_BAR");
-          },
-        },
-        {
           label: "Reload",
           accelerator: process.platform === "darwin" ? "Cmd+R" : "Ctrl+R",
           click: () => {
@@ -55,6 +48,20 @@ const createWindow = () => {
             process.platform === "darwin" ? "Cmd+Shift+R" : "Ctrl+Shift+R",
           click: () => {
             mainWindow.webContents.send("FORCE_RELOAD");
+          },
+        },
+        {
+          label: "Focus address bar",
+          accelerator: process.platform === "darwin" ? "Cmd+L" : "Ctrl+L",
+          click: () => {
+            mainWindow.webContents.send("FOCUS_ADDRESS_BAR");
+          },
+        },
+        {
+          label: "Close tab",
+          accelerator: process.platform === "darwin" ? "Cmd+W" : "Ctrl+W",
+          click: () => {
+            mainWindow.close();
           },
         },
       ],
