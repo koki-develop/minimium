@@ -13,7 +13,10 @@ export default function App() {
 
   const handleWebviewStateChange = (state: WebviewState) => {
     setWebviewState(state);
-    setQuery(state.url);
+  };
+
+  const handleWebviewUrlChange = (url: string) => {
+    setQuery(url);
   };
 
   const handleSubmit = (query: string) => {
@@ -40,6 +43,7 @@ export default function App() {
         className="flex-grow"
         src={webviewUrl}
         onStateChange={(state) => handleWebviewStateChange(state)}
+        onUrlChange={(url) => handleWebviewUrlChange(url)}
       />
     </div>
   );

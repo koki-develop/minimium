@@ -48,7 +48,6 @@ const webviewEvents = [
 ];
 
 export type WebviewState = {
-  url: string;
   isLoading: boolean;
   canGoBack: boolean;
   canGoForward: boolean;
@@ -59,16 +58,17 @@ export type WebviewTag = ElectronWebviewTag;
 export type WebviewProps = ComponentPropsWithoutRef<"webview"> & {
   ref: RefObject<WebviewTag | null>;
   onStateChange: (state: WebviewState) => void;
+  onUrlChange: (url: string) => void;
 };
 
 export default function Webview({
   ref,
   onStateChange,
+  onUrlChange,
 
   ...props
 }: WebviewProps) {
   const webviewRef = useRef<ElectronWebviewTag>(null);
-  const [url, setUrl] = useState<string>(props.src ?? "");
   const [domReady, setReady] = useState<boolean>(false);
 
   const reflectRef = useCallback(() => {
@@ -80,12 +80,11 @@ export default function Webview({
   const reflectState = useCallback(() => {
     if (!webviewRef.current) return;
     onStateChange?.({
-      url,
       isLoading: webviewRef.current.isLoadingMainFrame(),
       canGoBack: webviewRef.current.canGoBack(),
       canGoForward: webviewRef.current.canGoForward(),
     });
-  }, [onStateChange, url]);
+  }, [onStateChange]);
 
   const reflect = useCallback(() => {
     reflectRef();
@@ -123,9 +122,12 @@ export default function Webview({
    * did-navigate
    */
 
-  const handleDidNavigate = useCallback(({ url }: { url: string }) => {
-    setUrl(url);
-  }, []);
+  const handleDidNavigate = useCallback(
+    ({ url }: { url: string }) => {
+      onUrlChange?.(url);
+    },
+    [onUrlChange],
+  );
 
   useEffect(() => {
     webviewRef.current?.addEventListener("did-navigate", handleDidNavigate);
@@ -144,10 +146,10 @@ export default function Webview({
   const handleDidNavigateInPage = useCallback(
     ({ isMainFrame, url }: { isMainFrame: boolean; url: string }) => {
       if (isMainFrame) {
-        setUrl(url);
+        onUrlChange?.(url);
       }
     },
-    [],
+    [onUrlChange],
   );
 
   useEffect(() => {
