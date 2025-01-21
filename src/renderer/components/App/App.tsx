@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddressBar from "../AddressBar";
 import StartPage from "../StartPage";
 import Webview, { type WebviewState, type WebviewTag } from "../Webview";
@@ -22,6 +22,24 @@ export default function App() {
     setQuery(query);
     setWebviewUrl(query);
   };
+
+  useEffect(() => {
+    window.minimium.subscribe("RELOAD", () => {
+      webviewRef.current?.reload();
+    });
+    return () => {
+      window.minimium.unsubscribe("RELOAD");
+    };
+  }, []);
+
+  useEffect(() => {
+    window.minimium.subscribe("FORCE_RELOAD", () => {
+      webviewRef.current?.reloadIgnoringCache();
+    });
+    return () => {
+      window.minimium.unsubscribe("FORCE_RELOAD");
+    };
+  }, []);
 
   return (
     <div className="flex min-h-dvh min-w-dvw flex-col">

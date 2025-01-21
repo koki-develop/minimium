@@ -31,6 +31,21 @@ const createWindow = () => {
             mainWindow.webContents.send("FOCUS_ADDRESS_BAR");
           },
         },
+        {
+          label: "Reload",
+          accelerator: process.platform === "darwin" ? "Cmd+R" : "Ctrl+R",
+          click: () => {
+            mainWindow.webContents.send("RELOAD");
+          },
+        },
+        {
+          label: "Force reload",
+          accelerator:
+            process.platform === "darwin" ? "Cmd+Shift+R" : "Ctrl+Shift+R",
+          click: () => {
+            mainWindow.webContents.send("FORCE_RELOAD");
+          },
+        },
       ],
     }),
   );
