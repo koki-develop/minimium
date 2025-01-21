@@ -1,5 +1,5 @@
 import path from "node:path";
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, Menu, MenuItem, app } from "electron";
 import contextMenu from "electron-context-menu";
 import started from "electron-squirrel-startup";
 
@@ -18,6 +18,23 @@ const createWindow = () => {
   });
 
   contextMenu({ window: mainWindow, showInspectElement: false });
+
+  const menu = new Menu();
+  menu.append(
+    new MenuItem({
+      label: "Tools",
+      submenu: [
+        {
+          label: "Focus address bar",
+          accelerator: process.platform === "darwin" ? "Cmd+L" : "Ctrl+L",
+          click: () => {
+            mainWindow.webContents.send("FOCUS_ADDRESS_BAR");
+          },
+        },
+      ],
+    }),
+  );
+  Menu.setApplicationMenu(menu);
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);

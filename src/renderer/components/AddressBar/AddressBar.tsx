@@ -5,7 +5,7 @@ import {
   IconProgressX,
   IconRefresh,
 } from "@tabler/icons-react";
-import { type FormEvent, useRef } from "react";
+import { type FormEvent, useEffect, useRef } from "react";
 import { httpUrl } from "../../lib/util";
 
 export type AddressBarProps = {
@@ -55,6 +55,15 @@ export default function AddressBar({
 
     onSubmit(parsedUrl);
   };
+
+  useEffect(() => {
+    window.minimium.subscribe("FOCUS_ADDRESS_BAR", () => {
+      inputRef.current?.focus();
+    });
+    return () => {
+      window.minimium.unsubscribe("FOCUS_ADDRESS_BAR");
+    };
+  }, []);
 
   return (
     <div className="flex items-center gap-2 border-gray-200 border-b border-solid px-4 py-2">
