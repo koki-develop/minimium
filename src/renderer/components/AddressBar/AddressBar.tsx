@@ -96,6 +96,7 @@ export default function AddressBar({
           classNames={{
             input: "focus:text-black focus:bg-white bg-gray-100 text-gray-600",
           }}
+          placeholder="Search or enter URL"
           radius="xl"
           type="text"
           value={query}
