@@ -1,5 +1,5 @@
 import path from "node:path";
-import { BrowserWindow, Menu, MenuItem, app } from "electron";
+import { BrowserWindow, Menu, app } from "electron";
 import contextMenu from "electron-context-menu";
 import started from "electron-squirrel-startup";
 
@@ -19,9 +19,20 @@ const createWindow = () => {
 
   contextMenu({ window: mainWindow, showInspectElement: false });
 
-  const menu = new Menu();
-  menu.append(
-    new MenuItem({
+  const menu = Menu.buildFromTemplate([
+    {
+      label: "Minimium",
+      submenu: [
+        {
+          label: "Quit",
+          accelerator: process.platform === "darwin" ? "Cmd+Q" : "Ctrl+Q",
+          click: () => {
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
       label: "Tools",
       submenu: [
         {
@@ -47,8 +58,8 @@ const createWindow = () => {
           },
         },
       ],
-    }),
-  );
+    },
+  ]);
   Menu.setApplicationMenu(menu);
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
