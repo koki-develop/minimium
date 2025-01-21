@@ -53,7 +53,7 @@ export default function AddressBar({
       return;
     }
 
-    onSubmit(parsedUrl.toString());
+    onSubmit(parsedUrl);
   };
 
   return (
