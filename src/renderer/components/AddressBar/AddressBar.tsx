@@ -6,6 +6,7 @@ import {
   IconRefresh,
 } from "@tabler/icons-react";
 import { type FormEvent, useRef } from "react";
+import { httpUrl } from "../../lib/util";
 
 export type AddressBarProps = {
   query: string;
@@ -38,8 +39,17 @@ export default function AddressBar({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(query);
     inputRef.current?.blur();
+
+    const parsedUrl = httpUrl(query);
+    if (parsedUrl == null) {
+      const url = new URL("https://duckduckgo.com");
+      url.searchParams.set("q", query);
+      onSubmit(url.toString());
+      return;
+    }
+
+    onSubmit(parsedUrl.toString());
   };
 
   return (
