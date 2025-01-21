@@ -25,6 +25,8 @@ export default function App() {
 
   return (
     <div className="flex min-h-dvh min-w-dvw flex-col">
+      <title>{webviewState?.title ?? "Minimium"}</title>
+
       <AddressBar
         query={query}
         loading={webviewState?.isLoading ?? false}

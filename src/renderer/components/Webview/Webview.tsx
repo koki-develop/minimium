@@ -48,6 +48,7 @@ const webviewEvents = [
 ];
 
 export type WebviewState = {
+  title: string;
   isLoading: boolean;
   canGoBack: boolean;
   canGoForward: boolean;
@@ -80,6 +81,7 @@ export default function Webview({
   const reflectState = useCallback(() => {
     if (!webviewRef.current) return;
     onStateChange?.({
+      title: webviewRef.current.getTitle(),
       isLoading: webviewRef.current.isLoadingMainFrame(),
       canGoBack: webviewRef.current.canGoBack(),
       canGoForward: webviewRef.current.canGoForward(),
