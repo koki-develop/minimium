@@ -8,6 +8,8 @@ on:
 jobs:
   release:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: aquaproj/aqua-installer@v3.1.1
