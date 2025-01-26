@@ -12,7 +12,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     icon: "assets/icon",
-    executableName: "Minimium",
+    executableName: "minimium",
   },
   rebuildConfig: {},
   makers: [
