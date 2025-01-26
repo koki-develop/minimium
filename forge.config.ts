@@ -26,6 +26,7 @@ const config: ForgeConfig = {
         owner: "koki-develop",
         name: "minimium",
       },
+      generateReleaseNotes: true,
     }),
   ],
   plugins: [
