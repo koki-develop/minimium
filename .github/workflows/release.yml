@@ -1,9 +1,15 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      release-level:
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
 
 jobs:
   release:
@@ -15,7 +21,21 @@ jobs:
       - uses: aquaproj/aqua-installer@v3.1.1
         with:
           aqua_version: v2.43.0
+
+      - name: Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - run: npm ci
+
+      - run: npm version "${RELEASE_LEVEL}"
+        env:
+          RELEASE_LEVEL: ${{ inputs.release-level }}
+
+      - name: Push
+        run: git push --follow-tags
+
       - run: npm run publish
         env:
           GITHUB_TOKEN: ${{ github.token }}
