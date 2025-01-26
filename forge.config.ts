@@ -9,6 +9,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     icon: "assets/icon",
+    osxSign: {},
   },
   rebuildConfig: {},
   makers: [new MakerZIP({}, ["darwin"])],
