@@ -19,6 +19,7 @@ const config: ForgeConfig = {
         name: "minimium",
       },
       generateReleaseNotes: true,
+      draft: false,
     }),
   ],
   plugins: [
